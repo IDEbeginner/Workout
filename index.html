@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAINS AT HOME - Programme d'entraînement</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+```
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+        min-height: 100vh;
+        color: #e2e8f0;
+    }
+
+    .container {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 1.5rem;
+    }
+
+    /* Header */
+    .header {
+        border-bottom: 1px solid #374151;
+        padding-bottom: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .header h1 {
+        font-size: 3rem;
+        font-weight: 900;
+        color: #fff;
+        margin-bottom: 0.5rem;
+        font-family: 'Courier New', monospace;
+        letter-spacing: 2px;
+    }
+
+    .header p {
+        color: #9ca3af;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+    /* Stats */
+    .stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        border-radius: 0.75rem;
+        padding: 1.25rem;
+        color: white;
+    }
+
+    .stat-card.sessions {
+        background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+    }
+
+    .stat-card.progress {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    }
+
+    .stat-card label {
+        font-size: 0.875rem;
+        opacity: 0.8;
+        font-weight: 500;
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-card .value {
+        font-size: 2.5rem;
+        font-weight: 900;
+    }
+
+    /* Day Selection */
+    .day-selector {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.75rem;
+        margin-bottom: 2rem;
+    }
+
+    .day-btn {
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        border: none;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s;
+        background: #374151;
+        color: #d1d5db;
+        font-size: 0.95rem;
+    }
+
+    .day-btn:hover {
+        background: #4b5563;
+    }
+
+    .day-btn.active {
+        background: #f59e0b;
+        color: white;
+        transform: scale(1.05);
+    }
+
+    .day-btn .emoji {
+        display: block;
+        font-size: 1.25rem;
+        margin-bottom: 0.25rem;
+    }
+
+    /* Main Grid */
+    .main-grid {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    @media (max-width: 1024px) {
+        .main-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Exercise List */
+    .exercise-list {
+        background: #1f2937;
+        border: 1px solid #374151;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        max-height: 500px;
+        overflow-y: auto;
+        position: sticky;
+        top: 1rem;
+    }
+
+    .exercise-list h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .exercise-list .duration {
+        color: #9ca3af;
+        font-size: 0.875rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .exercise-item {
+        padding: 1rem;
+        border-radius: 0.5rem;
+        border: 2px solid #4b5563;
+        margin-bottom: 0.5rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        background: #374151;
+    }
+
+    .exercise-item:hover {
+        border-color: #f59e0b;
+        background: #3f4655;
+    }
+
+    .exercise-item.selected {
+        background: #78350f;
+        border-color: #f59e0b;
+    }
+
+    .exercise-item.completed {
+        background: #064e3b;
+        border-color: #10b981;
+        opacity: 0.6;
+    }
+
+    .exercise-item.completed .name {
+        text-decoration: line-through;
+        color: #9ca3af;
+    }
+
+    .exercise-item .checkbox {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #6b7280;
+        border-radius: 50%;
+        margin-right: 0.75rem;
+        vertical-align: middle;
+    }
+
+    .exercise-item.completed .checkbox {
+        background: #10b981;
+        border-color: #10b981;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+    }
+
+    .exercise-item .name {
+        font-weight: 600;
+        color: white;
+        display: block;
+        margin-bottom: 0.25rem;
+    }
+
+    .exercise-item .details {
+        font-size: 0.75rem;
+        color: #9ca3af;
+    }
+
+    .mark-btn {
+        width: 100%;
+        margin-top: 0.5rem;
+        padding: 0.5rem;
+        background: #059669;
+        color: white;
+        border: none;
+        border-radius: 0.375rem;
+        cursor: pointer;
+        font-size: 0.75rem;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+    .mark-btn:hover {
+        background: #047857;
+    }
+
+    /* Exercise Details */
+    .exercise-details {
+        background: #1f2937;
+        border: 1px solid #374151;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+    }
+
+    .exercise-details.empty {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 400px;
+        color: #9ca3af;
+        font-size: 1.125rem;
+    }
+
+    .exercise-details h3 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 0.5rem;
+    }
+
+    .exercise-details .meta {
+        color: #9ca3af;
+        font-size: 0.875rem;
+        margin-bottom: 1rem;
+    }
+
+    .exercise-details .muscles {
+        color: #fbbf24;
+        font-size: 0.875rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .section {
+        margin-bottom: 1.5rem;
+    }
+
+    .section h4 {
+        font-weight: 700;
+        color: white;
+        margin-bottom: 0.75rem;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .form-section {
+        background: #111827;
+        border: 1px solid #374151;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-section p {
+        color: #d1d5db;
+        font-size: 0.875rem;
+        line-height: 1.6;
+    }
+
+    .tips-section {
+        background: #78350f;
+        border: 1px solid #b45309;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .tips-section p {
+        color: #fef3c7;
+        font-size: 0.875rem;
+        line-height: 1.6;
+    }
+
+    .details-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .detail-box {
+        background: #374151;
+        border-radius: 0.5rem;
+        padding: 1rem;
+    }
+
+    .detail-box label {
+        color: #9ca3af;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    .detail-box .value {
+        font-size: 2rem;
+        font-weight: 900;
+        color: #fbbf24;
+    }
+
+    .complete-btn {
+        width: 100%;
+        padding: 0.75rem;
+        background: #059669;
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 0.95rem;
+    }
+
+    .complete-btn:hover {
+        background: #047857;
+        transform: scale(1.02);
+    }
+
+    /* Complete Session Button */
+    .session-complete-btn {
+        width: 100%;
+        padding: 1rem;
+        background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 1rem;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .session-complete-btn:hover {
+        transform: scale(1.05);
+    }
+
+    .session-complete-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    /* Tips Footer */
+    .tips-footer {
+        background: #1f2937;
+        border: 1px solid #374151;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .tips-footer h3 {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .tips-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+
+    .tip-item {
+        background: #111827;
+        padding: 1rem;
+        border-radius: 0.5rem;
+    }
+
+    .tip-item p:first-child {
+        color: #fbbf24;
+        font-weight: 600;
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .tip-item p:last-child {
+        color: #d1d5db;
+        font-size: 0.875rem;
+        line-height: 1.5;
+    }
+
+    .footer {
+        text-align: center;
+        color: #6b7280;
+        font-size: 0.875rem;
+        margin-top: 3rem;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #1f2937;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #4b5563;
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #6b7280;
+    }
+</style>
+```
+
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>💪 GAINS AT HOME</h1>
+            <p>⚡ Programme complet • Sans équipement • À la maison</p>
+        </div>
+
+```
+    <!-- Stats -->
+    <div class="stats">
+        <div class="stat-card sessions">
+            <label>Séances complétées</label>
+            <div class="value" id="sessionsCount">0</div>
+        </div>
+        <div class="stat-card progress">
+            <label>Cette séance</label>
+            <div class="value"><span id="completedExercises">0</span>/<span id="totalExercises">0</span></div>
+        </div>
+    </div>
+
+    <!-- Day Selector -->
+    <div class="day-selector" id="daySelector"></div>
+
+    <!-- Main Content -->
+    <div class="main-grid">
+        <!-- Exercise List -->
+        <div class="exercise-list" id="exerciseList"></div>
+
+        <!-- Exercise Details -->
+        <div class="exercise-details empty" id="exerciseDetails">
+            <p>👈 Clique sur un exercice pour voir les détails</p>
+        </div>
+    </div>
+
+    <!-- Complete Session Button -->
+    <button class="session-complete-btn" id="completeSessionBtn" style="display: none;">
+        ↑ Marquer la séance comme complétée
+    </button>
+
+    <!-- Tips Footer -->
+    <div class="tips-footer">
+        <h3>📋 Notes importantes</h3>
+        <div class="tips-grid">
+            <div class="tip-item">
+                <p>📈 Progression</p>
+                <p>Chaque semaine, essaie +1-2 reps ou -10s de repos</p>
+            </div>
+            <div class="tip-item">
+                <p>⏰ Récupération</p>
+                <p>48h minimum entre deux séances du même groupe</p>
+            </div>
+            <div class="tip-item">
+                <p>🥗 Nutrition</p>
+                <p>~159g protéines/jour + calories en surplus</p>
+            </div>
+            <div class="tip-item">
+                <p>😴 Sommeil</p>
+                <p>Après 12h de nuit, max 1-2 jours avant d'attaquer</p>
+            </div>
+            <div class="tip-item">
+                <p>🔥 Échauffement</p>
+                <p>5 min léger avant (jump squats, rotations)</p>
+            </div>
+            <div class="tip-item">
+                <p>💪 Forme</p>
+                <p>Mieux vaut 8 bonnes reps que 12 pourries</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Fais gaffe à toi. Bonne chance les gains. 🚀</p>
+    </div>
+</div>
+
+<script>
+    const workoutData = {
+        lundi: {
+            name: 'Poitrine & Triceps',
+            duration: '⏱️ 30 min',
+            emoji: '💪',
+            exercises: [
+                {
+                    name: 'Pompes classiques',
+                    sets: '3x12',
+                    rest: '60s',
+                    muscles: 'Pectoraux, Triceps',
+                    tips: 'Garde ton dos droit, coudes à 45° du corps. Descends jusqu\'à ce que ta poitrine touche presque le sol.',
+                    form: 'Position haute avec bras tendus → Descends lentement → Remonte en poussant'
+                },
+                {
+                    name: 'Pompes inclinées',
+                    sets: '3x10',
+                    rest: '60s',
+                    muscles: 'Pectoraux supérieurs',
+                    tips: 'Pieds surélevés sur une chaise/lit pour plus d\'intensité au haut des pecs.',
+                    form: 'Même mouvement qu\'une pompe classique mais en position inclinée'
+                },
+                {
+                    name: 'Dips chaise',
+                    sets: '3x10',
+                    rest: '60s',
+                    muscles: 'Triceps, Pectoraux',
+                    tips: 'Utilise une chaise stable. Descends jusqu\'à 90° minimum pour vraiment sentir les triceps.',
+                    form: 'Mains sur la chaise → Descends en pliant les coudes → Remonte'
+                },
+                {
+                    name: 'Pompes diamant',
+                    sets: '3x8',
+                    rest: '45s',
+                    muscles: 'Triceps',
+                    tips: 'Mains très rapprochées (formant un diamant). Focus 100% sur les triceps.',
+                    form: 'Mains proches au centre → Descends → Remonte en contractant les triceps'
+                }
+            ]
+        },
+        mercredi: {
+            name: 'Dos & Biceps',
+            duration: '⏱️ 30 min',
+            emoji: '🔙',
+            exercises: [
+                {
+                    name: 'Tractions',
+                    sets: '3x8',
+                    rest: '90s',
+                    muscles: 'Dos, Biceps',
+                    tips: 'Si t\'as pas de barre: utilise une porte ou un cadre stable. Menton doit passer au-dessus.',
+                    form: 'Bras tendus → Tire vers le haut → Menton au-dessus → Descends contrôlé'
+                },
+                {
+                    name: 'Rowing inverti',
+                    sets: '3x10',
+                    rest: '60s',
+                    muscles: 'Dos, Biceps',
+                    tips: 'Corps droit en planche. Tire ton corps vers la barre (porte). Excellent pour le dos.',
+                    form: 'Corps horizontal sous la barre → Tire le corps vers la barre → Redescends'
+                },
+                {
+                    name: 'Flexions biceps (mains serrées)',
+                    sets: '3x10',
+                    rest: '60s',
+                    muscles: 'Biceps',
+                    tips: 'Comme des pompes mais mains très proches. Le focus passe aux biceps au lieu de la poitrine.',
+                    form: 'Position pompe mains proches → Descends → Remonte'
+                },
+                {
+                    name: 'Superman hold',
+                    sets: '3x20s',
+                    rest: '45s',
+                    muscles: 'Dos, Ischio-jambiers',
+                    tips: 'Bras et jambes tendus en l\'air. Contracte ton dos fort. Tiens la position.',
+                    form: 'Allongé au sol → Soulève bras et jambes → Tiens 20 secondes'
+                }
+            ]
+        },
+        vendredi: {
+            name: 'Jambes & Cardio',
+            duration: '⏱️ 35 min',
+            emoji: '🦵',
+            exercises: [
+                {
+                    name: 'Squats classiques',
+                    sets: '4x15',
+                    rest: '60s',
+                    muscles: 'Quadriceps, Fessiers',
+                    tips: 'Descends comme si tu t\'assis sur une chaise. Genou ne dépasse pas la pointe du pied.',
+                    form: 'Debout → Descends en pliant les genoux → Remonte en poussant'
+                },
+                {
+                    name: 'Fentes alternées',
+                    sets: '3x12',
+                    rest: '60s',
+                    muscles: 'Quadriceps, Fessiers',
+                    tips: 'Alterne les jambes. Chaque jambe = 1 rep. 90° minimum à chaque genou.',
+                    form: 'Pas en avant → Descends → Reviens position de départ → Alterne'
+                },
+                {
+                    name: 'Jump squats',
+                    sets: '3x12',
+                    rest: '90s',
+                    muscles: 'Quadriceps, Cardio',
+                    tips: 'Explosif! Saque-toi à chaque rep. Atterris doucement. C\'est intense.',
+                    form: 'Squat complet → Saute explosif vers le haut → Atterris → Répète'
+                },
+                {
+                    name: 'Glute bridges',
+                    sets: '3x15',
+                    rest: '45s',
+                    muscles: 'Fessiers',
+                    tips: 'Couché au sol, jambes à 90°. Serre les fesses en haut. Ressens la contraction.',
+                    form: 'Couché dos au sol → Lève les fesses vers le ciel → Serre en haut → Redescends'
+                },
+                {
+                    name: 'Burpees',
+                    sets: '3x8',
+                    rest: '120s',
+                    muscles: 'Full body + Cardio',
+                    tips: 'Squat → Planche → Pompe → Jump. Mouvements explosifs. Récup importante après.',
+                    form: 'Squat → Kick back en planche → Pompe → Jump explosif → Répète'
+                }
+            ]
+        },
+        samedi: {
+            name: 'Épaules & Full Body',
+            duration: '⏱️ 35 min',
+            emoji: '🌟',
+            exercises: [
+                {
+                    name: 'Pike push-ups',
+                    sets: '3x10',
+                    rest: '90s',
+                    muscles: 'Épaules',
+                    tips: 'Corps en V inversé. Focus 100% épaules. Plus dur qu\'une pompe classique.',
+                    form: 'Position pompe mais hanche haute (V inversé) → Descends → Remonte'
+                },
+                {
+                    name: 'Pompes classiques',
+                    sets: '3x12',
+                    rest: '60s',
+                    muscles: 'Poitrine globale',
+                    tips: 'Rappel: dos droit, coudes 45°. Mouvement contrôlé. Pas de rush.',
+                    form: 'Position haute → Descends → Remonte'
+                },
+                {
+                    name: 'Planches latérales',
+                    sets: '3x30s',
+                    rest: '45s',
+                    muscles: 'Obliques, Core',
+                    tips: 'Chaque côté = 30s. Hanche haute. Contracte ton core.',
+                    form: 'Corps de côté sur avant-bras → Lève hanche → Tiens'
+                },
+                {
+                    name: 'Planche classique',
+                    sets: '3x40s',
+                    rest: '60s',
+                    muscles: 'Core, Stabilisateurs',
+                    tips: 'Corps droit du talon à la tête. Serre l\'abdomen. Pas de cambrer.',
+                    form: 'Avant-bras au sol → Corps droit → Serre → Tiens 40 secondes'
+                },
+                {
+                    name: 'Mountain climbers',
+                    sets: '3x20',
+                    rest: '60s',
+                    muscles: 'Core + Cardio',
+                    tips: 'Rapide! Ramène les genoux vers la poitrine. Cardio intense.',
+                    form: 'Position planche → Alterne genoux rapidement vers poitrine → 20 reps'
+                },
+                {
+                    name: 'Push-ups au mur',
+                    sets: '3x20s',
+                    rest: '45s',
+                    muscles: 'Épaules (isométrique)',
+                    tips: 'Bras perpendiculaire au mur. Tiens la position. Pas de mouvement.',
+                    form: 'Face au mur → Bras à 90° → Pousse contre le mur → Tiens'
+                }
+            ]
+        }
+    };
+
+    let currentDay = 'lundi';
+    let selectedExerciseIdx = null;
+    let completedExercises = {};
+    let sessionsDone = 0;
+
+    // Load from localStorage
+    function loadState() {
+        const saved = localStorage.getItem('workoutState');
+        if (saved) {
+            const state = JSON.parse(saved);
+            completedExercises = state.completedExercises || {};
+            sessionsDone = state.sessionsDone || 0;
+            updateStats();
+        }
+    }
+
+    function saveState() {
+        localStorage.setItem('workoutState', JSON.stringify({
+            completedExercises,
+            sessionsDone
+        }));
+    }
+
+    function initDaySelector() {
+        const selector = document.getElementById('daySelector');
+        Object.keys(workoutData).forEach(day => {
+            const btn = document.createElement('button');
+            btn.className = `day-btn ${day === currentDay ? 'active' : ''}`;
+            btn.innerHTML = `<span class="emoji">${workoutData[day].emoji}</span>${day.substring(0, 3)}`;
+            btn.onclick = () => selectDay(day);
+            selector.appendChild(btn);
+        });
+    }
+
+    function selectDay(day) {
+        currentDay = day;
+        selectedExerciseIdx = null;
+        completedExercises = {};
+        
+        // Update buttons
+        document.querySelectorAll('.day-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        event.target.closest('.day-btn').classList.add('active');
+
+        renderExerciseList();
+        renderExerciseDetails();
+    }
+
+    function renderExerciseList() {
+        const list = document.getElementById('exerciseList');
+        const workout = workoutData[currentDay];
+        
+        list.innerHTML = `
+            <h2>${workout.emoji} ${workout.name}</h2>
+            <div class="duration">${workout.duration}</div>
+            <div id="exerciseItems"></div>
+        `;
+
+        const itemsContainer = document.getElementById('exerciseItems');
+        workout.exercises.forEach((exercise, idx) => {
+            const key = `${currentDay}-${idx}`;
+            const isCompleted = completedExercises[key];
+            const isSelected = selectedExerciseIdx === idx;
+
+            const item = document.createElement('div');
+            item.className = `exercise-item ${isCompleted ? 'completed' : ''} ${isSelected ? 'selected' : ''}`;
+            item.innerHTML = `
+                <div class="checkbox">${isCompleted ? '✓' : ''}</div>
+                <span class="name">${exercise.name}</span>
+                <div class="details">${exercise.sets} • ${exercise.rest}</div>
+            `;
+            item.onclick = () => selectExercise(idx);
+            itemsContainer.appendChild(item);
+
+            if (isSelected) {
+                const markBtn = document.createElement('button');
+                markBtn.className = 'mark-btn';
+                markBtn.textContent = '✓ Marquer comme complété';
+                markBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    toggleExercise(idx);
+                };
+                itemsContainer.appendChild(markBtn);
+            }
+        });
+
+        updateStats();
+    }
+
+    function selectExercise(idx) {
+        selectedExerciseIdx = selectedExerciseIdx === idx ? null : idx;
+        renderExerciseList();
+        renderExerciseDetails();
+    }
+
+    function renderExerciseDetails() {
+        const details = document.getElementById('exerciseDetails');
+        
+        if (selectedExerciseIdx === null) {
+            details.className = 'exercise-details empty';
+            details.innerHTML = '<p>👈 Clique sur un exercice pour voir les détails</p>';
+            return;
+        }
+
+        const exercise = workoutData[currentDay].exercises[selectedExerciseIdx];
+        
+        details.className = 'exercise-details';
+        details.innerHTML = `
+            <h3>${exercise.name}</h3>
+            <div class="meta">${exercise.sets} • ${exercise.rest} repos</div>
+            <div class="muscles">Muscles: ${exercise.muscles}</div>
+
+            <div class="section">
+                <div class="form-section">
+                    <h4>📍 Exécution</h4>
+                    <p>${exercise.form}</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="tips-section">
+                    <p><strong>💡 Conseil important:</strong> ${exercise.tips}</p>
+                </div>
+            </div>
+
+            <div class="details-grid">
+                <div class="detail-box">
+                    <label>Séries × Reps</label>
+                    <div class="value">${exercise.sets}</div>
+                </div>
+                <div class="detail-box">
+                    <label>Repos</label>
+                    <div class="value">${exercise.rest}</div>
+                </div>
+            </div>
+
+            <button class="complete-btn" onclick="toggleExercise(${selectedExerciseIdx})">✓ C'est bon, j'ai fait !</button>
+        `;
+    }
+
+    function toggleExercise(idx) {
+        const key = `${currentDay}-${idx}`;
+        completedExercises[key] = !completedExercises[key];
+        saveState();
+        renderExerciseList();
+        updateStats();
+    }
+
+    function updateStats() {
+        const workout = workoutData[currentDay];
+        const completed = Object.entries(completedExercises)
+            .filter(([k]) => k.startsWith(currentDay))
+            .length;
+        
+        document.getElementById('sessionsCount').textContent = sessionsDone;
+        document.getElementById('completedExercises').textContent = completed;
+        document.getElementById('totalExercises').textContent = workout.exercises.length;
+
+        const btn = document.getElementById('completeSessionBtn');
+        if (completed > 0) {
+            btn.style.display = 'flex';
+            btn.textContent = `↑ Marquer la séance comme complétée (${completed}/${workout.exercises.length})`;
+            btn.onclick = completeSession;
+        } else {
+            btn.style.display = 'none';
+        }
+    }
+
+    function completeSession() {
+        sessionsDone++;
+        Object.keys(completedExercises).forEach(k => {
+            if (k.startsWith(currentDay)) {
+                delete completedExercises[k];
+            }
+        });
+        saveState();
+        alert('🔥 Beau travail ! Séance enregistrée.');
+        updateStats();
+        renderExerciseList();
+        renderExerciseDetails();
+    }
+
+    // Initialize
+    loadState();
+    initDaySelector();
+    renderExerciseList();
+    updateStats();
+</script>
+```
+
+</body>
+</html>
