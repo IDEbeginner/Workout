@@ -18,6 +18,21 @@
         .header { margin-bottom: 30px; border-bottom: 1px solid #374151; padding-bottom: 20px; }
         .header h1 { font-size: 2.5rem; margin-bottom: 10px; }
         .header p { color: #9ca3af; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #374151; }
+        .tab-btn { 
+            padding: 12px 20px; 
+            background: transparent; 
+            border: none; 
+            color: #9ca3af; 
+            cursor: pointer; 
+            font-weight: 600;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        .tab-btn:hover { color: #fff; }
+        .tab-btn.active { color: #f59e0b; border-bottom-color: #f59e0b; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
         .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; }
         .stat-card { 
             padding: 20px; 
@@ -178,6 +193,59 @@
             display: none;
         }
         .session-btn.show { display: block; }
+        .strava-section { 
+            background: #1f2937; 
+            border: 1px solid #374151; 
+            border-radius: 12px; 
+            padding: 20px; 
+            margin-bottom: 20px;
+        }
+        .strava-section h3 { margin-bottom: 15px; }
+        .strava-form { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        @media (max-width: 640px) { .strava-form { grid-template-columns: 1fr; } }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { font-size: 0.85rem; color: #9ca3af; margin-bottom: 5px; }
+        .form-group input { 
+            padding: 10px; 
+            background: #111827; 
+            border: 1px solid #374151; 
+            border-radius: 6px; 
+            color: #fff;
+        }
+        .form-group input:focus { outline: none; border-color: #f59e0b; }
+        .btn-add-run { 
+            padding: 10px 20px; 
+            background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%); 
+            color: white; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-weight: 600;
+            align-self: flex-end;
+        }
+        .btn-add-run:hover { transform: translateY(-2px); }
+        .runs-list { display: grid; gap: 10px; }
+        .run-card { 
+            background: #111827; 
+            border: 1px solid #374151; 
+            border-radius: 8px; 
+            padding: 15px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+        }
+        .run-info { flex: 1; }
+        .run-date { font-size: 0.8rem; color: #9ca3af; }
+        .run-distance { font-size: 1.2rem; font-weight: 700; color: #f59e0b; }
+        .btn-delete { 
+            padding: 8px 12px; 
+            background: #dc2626; 
+            color: white; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-size: 0.75rem;
+        }
         .footer-section { 
             background: #1f2937; 
             border: 1px solid #374151; 
@@ -200,6 +268,21 @@
         .tip-card p:first-child { color: #f59e0b; font-weight: 700; margin-bottom: 8px; font-size: 0.9rem; }
         .tip-card p:last-child { color: #d1d5db; font-size: 0.85rem; line-height: 1.5; }
         .footer { text-align: center; color: #9ca3af; padding: 20px 0; }
+        .performance-section { background: #1f2937; border: 1px solid #374151; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+        .perf-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
+        .perf-card { background: #111827; border: 1px solid #374151; border-radius: 8px; padding: 15px; }
+        .perf-card h4 { margin-bottom: 10px; color: #f59e0b; }
+        .perf-history { display: grid; gap: 8px; max-height: 300px; overflow-y: auto; }
+        .perf-entry { 
+            display: flex; 
+            justify-content: space-between; 
+            padding: 8px; 
+            background: #0f172a; 
+            border-radius: 4px; 
+            font-size: 0.85rem;
+        }
+        .perf-date { color: #9ca3af; }
+        .perf-value { color: #10b981; font-weight: 600; }
     </style>
 </head>
 <body>
@@ -210,27 +293,71 @@
         </div>
 
 ```
-    <div class="stats">
-        <div class="stat-card stat-sessions">
-            <label>Séances complétées</label>
-            <div class="value" id="sessionsCount">0</div>
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('workout')">🏋️ Entraînement</button>
+        <button class="tab-btn" onclick="switchTab('running')">🏃 Running</button>
+        <button class="tab-btn" onclick="switchTab('performance')">📊 Performance</button>
+    </div>
+
+    <!-- ONGLET ENTRAÎNEMENT -->
+    <div id="workout" class="tab-content active">
+        <div class="stats">
+            <div class="stat-card stat-sessions">
+                <label>Séances complétées</label>
+                <div class="value" id="sessionsCount">0</div>
+            </div>
+            <div class="stat-card stat-progress">
+                <label>Cette séance</label>
+                <div class="value"><span id="completedExercises">0</span>/<span id="totalExercises">0</span></div>
+            </div>
         </div>
-        <div class="stat-card stat-progress">
-            <label>Cette séance</label>
-            <div class="value"><span id="completedExercises">0</span>/<span id="totalExercises">0</span></div>
+
+        <div class="day-selector" id="daySelector"></div>
+
+        <div class="main-grid">
+            <div class="exercise-list" id="exercisePanel"></div>
+            <div class="details-panel empty" id="detailsPanel">
+                <p>👈 Clique sur un exercice pour voir les détails</p>
+            </div>
+        </div>
+
+        <button class="session-btn" id="completeSessionBtn"></button>
+    </div>
+
+    <!-- ONGLET RUNNING -->
+    <div id="running" class="tab-content">
+        <div class="strava-section">
+            <h3>🏃 Ajouter une course Strava</h3>
+            <div class="strava-form">
+                <div class="form-group">
+                    <label>Distance (km)</label>
+                    <input type="number" id="runDistance" placeholder="5.2" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label>Temps (mm:ss)</label>
+                    <input type="text" id="runTime" placeholder="25:30">
+                </div>
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="runDate">
+                </div>
+            </div>
+            <button class="btn-add-run" onclick="addRun()">➕ Ajouter la course</button>
+        </div>
+
+        <div class="strava-section">
+            <h3>📋 Historique des courses</h3>
+            <div class="runs-list" id="runsList"></div>
         </div>
     </div>
 
-    <div class="day-selector" id="daySelector"></div>
-
-    <div class="main-grid">
-        <div class="exercise-list" id="exercisePanel"></div>
-        <div class="details-panel empty" id="detailsPanel">
-            <p>👈 Clique sur un exercice pour voir les détails</p>
+    <!-- ONGLET PERFORMANCE -->
+    <div id="performance" class="tab-content">
+        <div class="performance-section">
+            <h3>📊 Suivi de progression</h3>
+            <div class="perf-grid" id="performanceGrid"></div>
         </div>
     </div>
-
-    <button class="session-btn" id="completeSessionBtn"></button>
 
     <div class="footer-section">
         <h3>📋 Notes importantes</h3>
@@ -302,6 +429,8 @@
     let selectedExerciseIdx = null;
     let completedExercises = {};
     let sessionsDone = 0;
+    let runs = [];
+    let exerciseHistory = {};
 
     function loadState() {
         const saved = localStorage.getItem('workoutState');
@@ -309,11 +438,22 @@
             const state = JSON.parse(saved);
             completedExercises = state.completedExercises || {};
             sessionsDone = state.sessionsDone || 0;
+            runs = state.runs || [];
+            exerciseHistory = state.exerciseHistory || {};
         }
+        renderRunsList();
+        renderPerformance();
     }
 
     function saveState() {
-        localStorage.setItem('workoutState', JSON.stringify({ completedExercises, sessionsDone }));
+        localStorage.setItem('workoutState', JSON.stringify({ completedExercises, sessionsDone, runs, exerciseHistory }));
+    }
+
+    function switchTab(tab) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(tab).classList.add('active');
+        event.target.classList.add('active');
     }
 
     function initDaySelector() {
@@ -391,9 +531,15 @@
     function toggleExercise(idx) {
         const key = `${currentDay}-${idx}`;
         completedExercises[key] = !completedExercises[key];
+        const ex = workoutData[currentDay].exercises[idx];
+        if (completedExercises[key]) {
+            if (!exerciseHistory[ex.name]) exerciseHistory[ex.name] = [];
+            exerciseHistory[ex.name].push({ date: new Date().toLocaleDateString('fr-FR'), sets: ex.sets, rest: ex.rest });
+        }
         saveState();
         renderExercisePanel();
         updateStats();
+        renderPerformance();
     }
 
     function updateStats() {
@@ -422,6 +568,52 @@
         renderDetailsPanel();
     }
 
+    function addRun() {
+        const distance = parseFloat(document.getElementById('runDistance').value);
+        const time = document.getElementById('runTime').value;
+        const date = document.getElementById('runDate').value;
+        if (!distance || !time || !date) { alert('Remplis tous les champs!'); return; }
+        runs.push({ distance, time, date });
+        saveState();
+        document.getElementById('runDistance').value = '';
+        document.getElementById('runTime').value = '';
+        document.getElementById('runDate').value = '';
+        renderRunsList();
+    }
+
+    function deleteRun(idx) {
+        runs.splice(idx, 1);
+        saveState();
+        renderRunsList();
+    }
+
+    function renderRunsList() {
+        const list = document.getElementById('runsList');
+        if (runs.length === 0) { list.innerHTML = '<p style="color: #9ca3af; text-align: center;">Aucune course enregistrée</p>'; return; }
+        list.innerHTML = runs.map((run, idx) => `
+            <div class="run-card">
+                <div class="run-info">
+                    <div class="run-date">${run.date}</div>
+                    <div class="run-distance">${run.distance} km en ${run.time}</div>
+                </div>
+                <button class="btn-delete" onclick="deleteRun(${idx})">Supprimer</button>
+            </div>
+        `).join('');
+    }
+
+    function renderPerformance() {
+        const grid = document.getElementById('performanceGrid');
+        let html = '';
+        Object.entries(exerciseHistory).forEach(([exName, history]) => {
+            html += `<div class="perf-card"><h4>${exName}</h4><div class="perf-history">${history.map(h => `<div class="perf-entry"><span class="perf-date">${h.date}</span><span class="perf-value">${h.sets}</span></div>`).join('')}</div></div>`;
+        });
+        if (runs.length > 0) {
+            html += `<div class="perf-card"><h4>🏃 Courses</h4><div class="perf-history">${runs.map(r => `<div class="perf-entry"><span class="perf-date">${r.date}</span><span class="perf-value">${r.distance}km</span></div>`).join('')}</div></div>`;
+        }
+        grid.innerHTML = html || '<p style="color: #9ca3af;">Commence une séance pour voir ta progression!</p>';
+    }
+
+    document.getElementById('runDate').valueAsDate = new Date();
     loadState();
     initDaySelector();
     renderExercisePanel();
