@@ -13,71 +13,120 @@
         }
 
 ```
+    :root {
+        --primary: #f59e0b;
+        --primary-dark: #ea580c;
+        --success: #10b981;
+        --success-dark: #059669;
+        --bg-dark: #0f172a;
+        --bg-card: #1f2937;
+        --bg-input: #111827;
+        --border: #374151;
+        --text-primary: #ffffff;
+        --text-secondary: #d1d5db;
+        --text-muted: #9ca3af;
+    }
+
+    html, body {
+        width: 100%;
+        height: 100%;
+        overflow-x: hidden;
+    }
+
     body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        background: linear-gradient(135deg, var(--bg-dark) 0%, #1e293b 50%, var(--bg-dark) 100%);
+        color: var(--text-primary);
         min-height: 100vh;
-        color: #e2e8f0;
     }
 
     .container {
-        max-width: 1280px;
+        max-width: 1400px;
         margin: 0 auto;
-        padding: 1.5rem;
+        padding: 1rem;
     }
 
     /* Header */
     .header {
-        border-bottom: 1px solid #374151;
-        padding-bottom: 1.5rem;
         margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid var(--border);
     }
 
-    .header h1 {
-        font-size: 3rem;
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .header-text h1 {
+        font-size: clamp(2rem, 5vw, 3.5rem);
         font-weight: 900;
-        color: #fff;
         margin-bottom: 0.5rem;
-        font-family: 'Courier New', monospace;
-        letter-spacing: 2px;
+        letter-spacing: -1px;
     }
 
-    .header p {
-        color: #9ca3af;
+    .header-text p {
+        color: var(--text-muted);
         display: flex;
         align-items: center;
         gap: 0.5rem;
         font-size: 0.95rem;
     }
 
+    .strava-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(135deg, #FC4C02 0%, #E83E1A 100%);
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+        font-size: 0.9rem;
+    }
+
+    .strava-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(252, 76, 2, 0.3);
+    }
+
     /* Stats */
     .stats {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: 1rem;
         margin-bottom: 2rem;
     }
 
     .stat-card {
-        border-radius: 0.75rem;
-        padding: 1.25rem;
+        border-radius: 1rem;
+        padding: 1.5rem;
         color: white;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .stat-card.sessions {
-        background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
     }
 
     .stat-card.progress {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        background: linear-gradient(135deg, var(--success) 0%, var(--success-dark) 100%);
     }
 
     .stat-card label {
         font-size: 0.875rem;
-        opacity: 0.8;
+        opacity: 0.9;
         font-weight: 500;
         display: block;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.75rem;
     }
 
     .stat-card .value {
@@ -85,44 +134,48 @@
         font-weight: 900;
     }
 
-    /* Day Selection */
+    /* Day Selector */
     .day-selector {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
         gap: 0.75rem;
         margin-bottom: 2rem;
     }
 
     .day-btn {
-        padding: 0.75rem;
-        border-radius: 0.5rem;
-        border: none;
+        padding: 1rem;
+        border-radius: 0.75rem;
+        border: 2px solid var(--border);
+        background: var(--bg-card);
+        color: var(--text-secondary);
         font-weight: 700;
         cursor: pointer;
         transition: all 0.3s;
-        background: #374151;
-        color: #d1d5db;
         font-size: 0.95rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
     }
 
     .day-btn:hover {
-        background: #4b5563;
+        border-color: var(--primary);
+        background: rgba(245, 158, 11, 0.1);
     }
 
     .day-btn.active {
-        background: #f59e0b;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
         color: white;
+        border-color: var(--primary);
         transform: scale(1.05);
     }
 
     .day-btn .emoji {
-        display: block;
-        font-size: 1.25rem;
-        margin-bottom: 0.25rem;
+        font-size: 1.5rem;
     }
 
     /* Main Grid */
-    .main-grid {
+    .main-content {
         display: grid;
         grid-template-columns: 1fr 2fr;
         gap: 1.5rem;
@@ -130,290 +183,306 @@
     }
 
     @media (max-width: 1024px) {
-        .main-grid {
+        .main-content {
             grid-template-columns: 1fr;
         }
     }
 
     /* Exercise List */
-    .exercise-list {
-        background: #1f2937;
-        border: 1px solid #374151;
-        border-radius: 0.75rem;
+    .exercise-panel {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 1rem;
         padding: 1.5rem;
-        max-height: 500px;
-        overflow-y: auto;
+        height: fit-content;
         position: sticky;
         top: 1rem;
+        max-height: 80vh;
+        overflow-y: auto;
     }
 
-    .exercise-list h2 {
+    .exercise-panel h2 {
         font-size: 1.5rem;
         font-weight: 700;
-        color: white;
         margin-bottom: 0.5rem;
         display: flex;
         align-items: center;
         gap: 0.5rem;
     }
 
-    .exercise-list .duration {
-        color: #9ca3af;
+    .exercise-panel .duration {
+        color: var(--text-muted);
         font-size: 0.875rem;
         margin-bottom: 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
     }
 
     .exercise-item {
         padding: 1rem;
-        border-radius: 0.5rem;
-        border: 2px solid #4b5563;
+        border-radius: 0.75rem;
+        border: 2px solid transparent;
         margin-bottom: 0.5rem;
         cursor: pointer;
         transition: all 0.3s;
-        background: #374151;
+        background: var(--bg-input);
+        border-color: var(--border);
     }
 
     .exercise-item:hover {
-        border-color: #f59e0b;
-        background: #3f4655;
+        border-color: var(--primary);
+        background: rgba(245, 158, 11, 0.05);
     }
 
     .exercise-item.selected {
-        background: #78350f;
-        border-color: #f59e0b;
+        background: rgba(245, 158, 11, 0.2);
+        border-color: var(--primary);
     }
 
     .exercise-item.completed {
-        background: #064e3b;
-        border-color: #10b981;
         opacity: 0.6;
-    }
-
-    .exercise-item.completed .name {
-        text-decoration: line-through;
-        color: #9ca3af;
+        border-color: var(--success);
     }
 
     .exercise-item .checkbox {
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         width: 20px;
         height: 20px;
-        border: 2px solid #6b7280;
+        border: 2px solid var(--text-muted);
         border-radius: 50%;
         margin-right: 0.75rem;
         vertical-align: middle;
+        font-size: 0.75rem;
+        background: transparent;
+        color: var(--success);
     }
 
     .exercise-item.completed .checkbox {
-        background: #10b981;
-        border-color: #10b981;
+        background: var(--success);
+        border-color: var(--success);
         color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.75rem;
     }
 
     .exercise-item .name {
         font-weight: 600;
-        color: white;
+        color: var(--text-primary);
         display: block;
         margin-bottom: 0.25rem;
     }
 
+    .exercise-item.completed .name {
+        color: var(--text-muted);
+        text-decoration: line-through;
+    }
+
     .exercise-item .details {
         font-size: 0.75rem;
-        color: #9ca3af;
+        color: var(--text-muted);
     }
 
     .mark-btn {
         width: 100%;
         margin-top: 0.5rem;
-        padding: 0.5rem;
-        background: #059669;
+        padding: 0.625rem;
+        background: var(--success);
         color: white;
         border: none;
-        border-radius: 0.375rem;
+        border-radius: 0.5rem;
         cursor: pointer;
-        font-size: 0.75rem;
+        font-size: 0.8rem;
         font-weight: 600;
         transition: all 0.3s;
     }
 
     .mark-btn:hover {
-        background: #047857;
+        background: var(--success-dark);
     }
 
     /* Exercise Details */
-    .exercise-details {
-        background: #1f2937;
-        border: 1px solid #374151;
-        border-radius: 0.75rem;
-        padding: 1.5rem;
+    .details-panel {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 1rem;
+        padding: 2rem;
     }
 
-    .exercise-details.empty {
+    .details-panel.empty {
         display: flex;
         align-items: center;
         justify-content: center;
         min-height: 400px;
-        color: #9ca3af;
+        color: var(--text-muted);
         font-size: 1.125rem;
     }
 
-    .exercise-details h3 {
-        font-size: 2rem;
-        font-weight: 700;
-        color: white;
-        margin-bottom: 0.5rem;
+    .exercise-header {
+        margin-bottom: 2rem;
     }
 
-    .exercise-details .meta {
-        color: #9ca3af;
-        font-size: 0.875rem;
+    .exercise-header h3 {
+        font-size: clamp(1.75rem, 4vw, 2.5rem);
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+    }
+
+    .exercise-meta {
+        display: flex;
+        gap: 2rem;
+        flex-wrap: wrap;
         margin-bottom: 1rem;
     }
 
-    .exercise-details .muscles {
-        color: #fbbf24;
-        font-size: 0.875rem;
+    .meta-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .meta-item label {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+
+    .meta-item value {
+        font-size: 1rem;
+        color: var(--primary);
+        font-weight: 700;
+    }
+
+    .muscles-tag {
+        display: inline-block;
+        background: rgba(245, 158, 11, 0.2);
+        color: var(--primary);
+        padding: 0.5rem 1rem;
+        border-radius: 2rem;
+        font-size: 0.85rem;
+        font-weight: 600;
         margin-bottom: 1.5rem;
     }
 
     .section {
-        margin-bottom: 1.5rem;
+        margin-bottom: 2rem;
     }
 
     .section h4 {
         font-weight: 700;
-        color: white;
-        margin-bottom: 0.75rem;
-        font-size: 0.95rem;
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+        font-size: 1rem;
         display: flex;
         align-items: center;
         gap: 0.5rem;
     }
 
-    .form-section {
-        background: #111827;
-        border: 1px solid #374151;
-        border-radius: 0.5rem;
-        padding: 1rem;
-        margin-bottom: 1.5rem;
+    .section-box {
+        background: var(--bg-input);
+        border: 1px solid var(--border);
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        line-height: 1.7;
+        color: var(--text-secondary);
     }
 
-    .form-section p {
-        color: #d1d5db;
-        font-size: 0.875rem;
-        line-height: 1.6;
+    .tips-box {
+        background: rgba(251, 146, 60, 0.1);
+        border: 1px solid rgba(251, 146, 60, 0.3);
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        color: var(--text-secondary);
     }
 
-    .tips-section {
-        background: #78350f;
-        border: 1px solid #b45309;
-        border-radius: 0.5rem;
-        padding: 1rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .tips-section p {
-        color: #fef3c7;
-        font-size: 0.875rem;
-        line-height: 1.6;
+    .tips-box strong {
+        color: var(--primary);
     }
 
     .details-grid {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         gap: 1rem;
-        margin-bottom: 1.5rem;
+        margin-bottom: 2rem;
     }
 
     .detail-box {
-        background: #374151;
-        border-radius: 0.5rem;
-        padding: 1rem;
+        background: var(--bg-input);
+        border: 1px solid var(--border);
+        border-radius: 0.75rem;
+        padding: 1.25rem;
+        text-align: center;
     }
 
     .detail-box label {
-        color: #9ca3af;
+        color: var(--text-muted);
         font-size: 0.75rem;
-        font-weight: 600;
         text-transform: uppercase;
+        font-weight: 600;
         display: block;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.75rem;
     }
 
     .detail-box .value {
-        font-size: 2rem;
+        font-size: 1.75rem;
         font-weight: 900;
-        color: #fbbf24;
+        color: var(--primary);
     }
 
     .complete-btn {
         width: 100%;
-        padding: 0.75rem;
-        background: #059669;
-        color: white;
-        border: none;
-        border-radius: 0.5rem;
-        font-weight: 700;
-        cursor: pointer;
-        transition: all 0.3s;
-        font-size: 0.95rem;
-    }
-
-    .complete-btn:hover {
-        background: #047857;
-        transform: scale(1.02);
-    }
-
-    /* Complete Session Button */
-    .session-complete-btn {
-        width: 100%;
         padding: 1rem;
-        background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+        background: linear-gradient(135deg, var(--success) 0%, var(--success-dark) 100%);
         color: white;
         border: none;
-        border-radius: 0.5rem;
+        border-radius: 0.75rem;
         font-weight: 700;
         cursor: pointer;
         transition: all 0.3s;
         font-size: 1rem;
+    }
+
+    .complete-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
+    }
+
+    /* Complete Session Button */
+    .session-btn {
+        width: 100%;
+        padding: 1.25rem;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: white;
+        border: none;
+        border-radius: 0.75rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 1.05rem;
         margin-bottom: 2rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
+        display: none;
     }
 
-    .session-complete-btn:hover {
-        transform: scale(1.05);
+    .session-btn.show {
+        display: block;
     }
 
-    .session-complete-btn:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-        transform: none;
+    .session-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 24px rgba(245, 158, 11, 0.3);
     }
 
     /* Tips Footer */
-    .tips-footer {
-        background: #1f2937;
-        border: 1px solid #374151;
-        border-radius: 0.75rem;
-        padding: 1.5rem;
+    .footer-section {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 1rem;
+        padding: 2rem;
         margin-bottom: 2rem;
     }
 
-    .tips-footer h3 {
-        font-size: 1.125rem;
+    .footer-section h3 {
+        font-size: 1.25rem;
         font-weight: 700;
-        color: white;
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
         display: flex;
         align-items: center;
         gap: 0.5rem;
@@ -422,51 +491,76 @@
     .tips-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1rem;
+        gap: 1.5rem;
     }
 
-    .tip-item {
-        background: #111827;
-        padding: 1rem;
-        border-radius: 0.5rem;
+    .tip-card {
+        background: var(--bg-input);
+        border: 1px solid var(--border);
+        padding: 1.5rem;
+        border-radius: 0.75rem;
     }
 
-    .tip-item p:first-child {
-        color: #fbbf24;
-        font-weight: 600;
-        font-size: 0.875rem;
-        margin-bottom: 0.5rem;
+    .tip-card p:first-child {
+        color: var(--primary);
+        font-weight: 700;
+        font-size: 0.95rem;
+        margin-bottom: 0.75rem;
     }
 
-    .tip-item p:last-child {
-        color: #d1d5db;
-        font-size: 0.875rem;
-        line-height: 1.5;
+    .tip-card p:last-child {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        line-height: 1.6;
     }
 
     .footer {
         text-align: center;
-        color: #6b7280;
-        font-size: 0.875rem;
-        margin-top: 3rem;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        padding: 2rem 0;
     }
 
-    /* Scrollbar */
+    /* Scrollbar styling */
     ::-webkit-scrollbar {
-        width: 8px;
+        width: 6px;
+        height: 6px;
     }
 
     ::-webkit-scrollbar-track {
-        background: #1f2937;
+        background: transparent;
     }
 
     ::-webkit-scrollbar-thumb {
-        background: #4b5563;
-        border-radius: 4px;
+        background: var(--border);
+        border-radius: 3px;
     }
 
     ::-webkit-scrollbar-thumb:hover {
-        background: #6b7280;
+        background: var(--primary);
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+        .container {
+            padding: 0.75rem;
+        }
+
+        .details-panel {
+            padding: 1.5rem;
+        }
+
+        .day-selector {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .header-content {
+            flex-direction: column;
+        }
+
+        .stats {
+            grid-template-columns: 1fr;
+        }
     }
 </style>
 ```
@@ -476,8 +570,15 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1>💪 GAINS AT HOME</h1>
-            <p>⚡ Programme complet • Sans équipement • À la maison</p>
+            <div class="header-content">
+                <div class="header-text">
+                    <h1>💪 GAINS AT HOME</h1>
+                    <p>⚡ Programme complet • Sans équipement • À la maison</p>
+                </div>
+                <a href="#" class="strava-btn" id="stravaBtn" style="display: none;">
+                    <span>🏃</span> Connecter à Strava
+                </a>
+            </div>
         </div>
 
 ```
@@ -497,48 +598,46 @@
     <div class="day-selector" id="daySelector"></div>
 
     <!-- Main Content -->
-    <div class="main-grid">
+    <div class="main-content">
         <!-- Exercise List -->
-        <div class="exercise-list" id="exerciseList"></div>
+        <div class="exercise-panel" id="exercisePanel"></div>
 
         <!-- Exercise Details -->
-        <div class="exercise-details empty" id="exerciseDetails">
+        <div class="details-panel empty" id="detailsPanel">
             <p>👈 Clique sur un exercice pour voir les détails</p>
         </div>
     </div>
 
     <!-- Complete Session Button -->
-    <button class="session-complete-btn" id="completeSessionBtn" style="display: none;">
-        ↑ Marquer la séance comme complétée
-    </button>
+    <button class="session-btn" id="completeSessionBtn"></button>
 
     <!-- Tips Footer -->
-    <div class="tips-footer">
+    <div class="footer-section">
         <h3>📋 Notes importantes</h3>
         <div class="tips-grid">
-            <div class="tip-item">
+            <div class="tip-card">
                 <p>📈 Progression</p>
                 <p>Chaque semaine, essaie +1-2 reps ou -10s de repos</p>
             </div>
-            <div class="tip-item">
+            <div class="tip-card">
                 <p>⏰ Récupération</p>
-                <p>48h minimum entre deux séances du même groupe</p>
+                <p>48h minimum entre deux séances du même groupe musculaire</p>
             </div>
-            <div class="tip-item">
+            <div class="tip-card">
                 <p>🥗 Nutrition</p>
-                <p>~159g protéines/jour + calories en surplus</p>
+                <p>~159g protéines/jour + calories en surplus pour les gains</p>
             </div>
-            <div class="tip-item">
+            <div class="tip-card">
                 <p>😴 Sommeil</p>
                 <p>Après 12h de nuit, max 1-2 jours avant d'attaquer</p>
             </div>
-            <div class="tip-item">
+            <div class="tip-card">
                 <p>🔥 Échauffement</p>
-                <p>5 min léger avant (jump squats, rotations)</p>
+                <p>5 min léger avant (jump squats, rotations d'épaules)</p>
             </div>
-            <div class="tip-item">
+            <div class="tip-card">
                 <p>💪 Forme</p>
-                <p>Mieux vaut 8 bonnes reps que 12 pourries</p>
+                <p>Mieux vaut 8 bonnes reps que 12 pourries. La qualité c'est roi</p>
             </div>
         </div>
     </div>
@@ -737,19 +836,17 @@
     let completedExercises = {};
     let sessionsDone = 0;
 
-    // Load from localStorage
     function loadState() {
-        const saved = localStorage.getItem('workoutState');
+        const saved = localStorage.getItem('workoutAppState');
         if (saved) {
             const state = JSON.parse(saved);
             completedExercises = state.completedExercises || {};
             sessionsDone = state.sessionsDone || 0;
-            updateStats();
         }
     }
 
     function saveState() {
-        localStorage.setItem('workoutState', JSON.stringify({
+        localStorage.setItem('workoutAppState', JSON.stringify({
             completedExercises,
             sessionsDone
         }));
@@ -757,10 +854,11 @@
 
     function initDaySelector() {
         const selector = document.getElementById('daySelector');
+        selector.innerHTML = '';
         Object.keys(workoutData).forEach(day => {
             const btn = document.createElement('button');
             btn.className = `day-btn ${day === currentDay ? 'active' : ''}`;
-            btn.innerHTML = `<span class="emoji">${workoutData[day].emoji}</span>${day.substring(0, 3)}`;
+            btn.innerHTML = `<span class="emoji">${workoutData[day].emoji}</span><span>${day}</span>`;
             btn.onclick = () => selectDay(day);
             selector.appendChild(btn);
         });
@@ -769,104 +867,87 @@
     function selectDay(day) {
         currentDay = day;
         selectedExerciseIdx = null;
-        completedExercises = {};
         
-        // Update buttons
-        document.querySelectorAll('.day-btn').forEach(btn => {
-            btn.classList.remove('active');
-        });
+        document.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('active'));
         event.target.closest('.day-btn').classList.add('active');
 
-        renderExerciseList();
-        renderExerciseDetails();
+        renderExercisePanel();
+        renderDetailsPanel();
     }
 
-    function renderExerciseList() {
-        const list = document.getElementById('exerciseList');
+    function renderExercisePanel() {
+        const panel = document.getElementById('exercisePanel');
         const workout = workoutData[currentDay];
         
-        list.innerHTML = `
+        let html = `
             <h2>${workout.emoji} ${workout.name}</h2>
             <div class="duration">${workout.duration}</div>
-            <div id="exerciseItems"></div>
         `;
 
-        const itemsContainer = document.getElementById('exerciseItems');
         workout.exercises.forEach((exercise, idx) => {
             const key = `${currentDay}-${idx}`;
             const isCompleted = completedExercises[key];
             const isSelected = selectedExerciseIdx === idx;
 
-            const item = document.createElement('div');
-            item.className = `exercise-item ${isCompleted ? 'completed' : ''} ${isSelected ? 'selected' : ''}`;
-            item.innerHTML = `
-                <div class="checkbox">${isCompleted ? '✓' : ''}</div>
-                <span class="name">${exercise.name}</span>
-                <div class="details">${exercise.sets} • ${exercise.rest}</div>
+            html += `
+                <div class="exercise-item ${isCompleted ? 'completed' : ''} ${isSelected ? 'selected' : ''}" onclick="selectExercise(${idx})">
+                    <div class="checkbox">${isCompleted ? '✓' : ''}</div>
+                    <span class="name">${exercise.name}</span>
+                    <div class="details">${exercise.sets} • ${exercise.rest}</div>
+                </div>
             `;
-            item.onclick = () => selectExercise(idx);
-            itemsContainer.appendChild(item);
 
             if (isSelected) {
-                const markBtn = document.createElement('button');
-                markBtn.className = 'mark-btn';
-                markBtn.textContent = '✓ Marquer comme complété';
-                markBtn.onclick = (e) => {
-                    e.stopPropagation();
-                    toggleExercise(idx);
-                };
-                itemsContainer.appendChild(markBtn);
+                html += `<button class="mark-btn" onclick="toggleExercise(${idx}); event.stopPropagation();">✓ Marquer complété</button>`;
             }
         });
 
+        panel.innerHTML = html;
         updateStats();
     }
 
     function selectExercise(idx) {
         selectedExerciseIdx = selectedExerciseIdx === idx ? null : idx;
-        renderExerciseList();
-        renderExerciseDetails();
+        renderExercisePanel();
+        renderDetailsPanel();
     }
 
-    function renderExerciseDetails() {
-        const details = document.getElementById('exerciseDetails');
+    function renderDetailsPanel() {
+        const panel = document.getElementById('detailsPanel');
         
         if (selectedExerciseIdx === null) {
-            details.className = 'exercise-details empty';
-            details.innerHTML = '<p>👈 Clique sur un exercice pour voir les détails</p>';
+            panel.className = 'details-panel empty';
+            panel.innerHTML = '<p>👈 Clique sur un exercice pour voir les détails</p>';
             return;
         }
 
-        const exercise = workoutData[currentDay].exercises[selectedExerciseIdx];
+        const ex = workoutData[currentDay].exercises[selectedExerciseIdx];
         
-        details.className = 'exercise-details';
-        details.innerHTML = `
-            <h3>${exercise.name}</h3>
-            <div class="meta">${exercise.sets} • ${exercise.rest} repos</div>
-            <div class="muscles">Muscles: ${exercise.muscles}</div>
-
-            <div class="section">
-                <div class="form-section">
-                    <h4>📍 Exécution</h4>
-                    <p>${exercise.form}</p>
+        panel.className = 'details-panel';
+        panel.innerHTML = `
+            <div class="exercise-header">
+                <h3>${ex.name}</h3>
+                <div class="exercise-meta">
+                    <div class="meta-item">
+                        <label>Séries × Reps</label>
+                        <value>${ex.sets}</value>
+                    </div>
+                    <div class="meta-item">
+                        <label>Repos</label>
+                        <value>${ex.rest}</value>
+                    </div>
                 </div>
+                <span class="muscles-tag">${ex.muscles}</span>
             </div>
 
             <div class="section">
-                <div class="tips-section">
-                    <p><strong>💡 Conseil important:</strong> ${exercise.tips}</p>
-                </div>
+                <h4>📍 Exécution</h4>
+                <div class="section-box">${ex.form}</div>
             </div>
 
-            <div class="details-grid">
-                <div class="detail-box">
-                    <label>Séries × Reps</label>
-                    <div class="value">${exercise.sets}</div>
-                </div>
-                <div class="detail-box">
-                    <label>Repos</label>
-                    <div class="value">${exercise.rest}</div>
-                </div>
+            <div class="section">
+                <h4>💡 Conseil important</h4>
+                <div class="tips-box"><strong>⚠️</strong> ${ex.tips}</div>
             </div>
 
             <button class="complete-btn" onclick="toggleExercise(${selectedExerciseIdx})">✓ C'est bon, j'ai fait !</button>
@@ -877,7 +958,7 @@
         const key = `${currentDay}-${idx}`;
         completedExercises[key] = !completedExercises[key];
         saveState();
-        renderExerciseList();
+        renderExercisePanel();
         updateStats();
     }
 
@@ -893,11 +974,11 @@
 
         const btn = document.getElementById('completeSessionBtn');
         if (completed > 0) {
-            btn.style.display = 'flex';
-            btn.textContent = `↑ Marquer la séance comme complétée (${completed}/${workout.exercises.length})`;
+            btn.classList.add('show');
+            btn.textContent = `↑ Marquer la séance complétée (${completed}/${workout.exercises.length})`;
             btn.onclick = completeSession;
         } else {
-            btn.style.display = 'none';
+            btn.classList.remove('show');
         }
     }
 
@@ -911,14 +992,14 @@
         saveState();
         alert('🔥 Beau travail ! Séance enregistrée.');
         updateStats();
-        renderExerciseList();
-        renderExerciseDetails();
+        renderExercisePanel();
+        renderDetailsPanel();
     }
 
     // Initialize
     loadState();
     initDaySelector();
-    renderExerciseList();
+    renderExercisePanel();
     updateStats();
 </script>
 ```
